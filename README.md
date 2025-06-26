@@ -155,6 +155,29 @@ The result is a significant improvement over the default Audio Oscillator CHOP i
 
 ---
 
+🔮 Future Development
+The AdvancedAudioOscillatorCHOP project provides a flexible foundation for real-time procedural audio in TouchDesigner. Several directions are currently under consideration for future development:
+
+🎚 ADSR Envelope Generator: Add per-channel envelope shaping modules with visual feedback.
+
+🎛 Modulation Matrix: Route internal or external LFOs and envelopes to oscillator parameters via a patchable matrix.
+
+🔁 FM / AM Support: Enable per-channel frequency or amplitude modulation with cross-routing options.
+
+🎼 MIDI Input Support: Trigger oscillator notes and modulation via external MIDI controllers or TouchDesigner’s MIDI In CHOP.
+
+🔊 Spectral Shaping: Implement convolution- or filterbank-based spectral morphing for wavetable output.
+
+💾 Preset System: Allow users to save and load complete oscillator configurations.
+
+🚀 GPU Acceleration (experimental): Port audio synthesis routines to GLSL or CUDA for high-performance multi-voice synthesis.
+
+📈 Live Visual Feedback: Include real-time waveform display and FFT analysis via connected TOPs or CHOP visualisers.
+
+🔌 OSC & Networked Modulation: Control oscillators remotely over network or OSC protocols.
+
+Community contributions and feature requests are welcome via issues or pull requests.
+
 ## Discussion
 
 The development of this oscillator script not only augments TouchDesigner’s internal audio synthesis tools but opens up broader possibilities for DSP within a visual programming context. By leveraging NumPy and advanced waveform modelling, it bridges the gap between procedural audio and real-time generative systems. The oscillator's:
