@@ -3,7 +3,7 @@
 
 ---
 
-## 🧰 Installation
+## Installation
 
 1. Clone the repository or download ZIP  
 2. Open `example_project.toe` in **TouchDesigner**  
@@ -14,7 +14,7 @@
 
 ---
 
-## 🧑‍💻 Usage
+## Usage
 
 - Use `Numchannels` to set the number of oscillator voices  
 - Press `Update Channels` pulse to refresh pages  
@@ -24,7 +24,7 @@
 
 ---
 
-## 🧩 Dependencies
+## Dependencies
 
 - [NumPy](https://numpy.org/) – used internally by TouchDesigner (already included)  
 - TouchDesigner 2022 or later  
@@ -32,7 +32,7 @@
 
 ---
 
-## 🙏 Credits
+## Credits
 
 - Developed by [@saimgulay](https://github.com/saimgulay)  
 - Inspired by modular synthesis tools such as Max/MSP, VCV Rack, and SuperCollider  
@@ -40,7 +40,7 @@
 
 ---
 
-## 📜 License
+## License
 
 This project is released under the MIT License. You are free to use, modify, and distribute it with attribution.
 
