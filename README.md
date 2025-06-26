@@ -6,7 +6,7 @@
 ## 🧰 Installation
 
 1. Clone the repository or download ZIP  
-2. Open `AdvancedAudioOscillatorCHOP.toe` in **TouchDesigner**  
+2. Open `example_project.toe` in **TouchDesigner**  
 3. Ensure Python module `NumPy` is available (TD >= 2022)  
 4. Run project and adjust channels using custom parameter UI
 
