@@ -114,7 +114,7 @@ Developing this oscillator required navigating a significant gap in TouchDesigne
 
 Furthermore, Python scripting in TouchDesigner—especially involving NumPy and real-time audio—operates in a constrained sandbox that demanded careful performance optimisations and memory management.
 
-![Expert-Based Empathy Map](EmpathyMap.png)
+![Expert-Based Empathy Map](images/EmpathyMap.png)
 
 ---
 
@@ -168,4 +168,4 @@ The development of this oscillator script not only augments TouchDesigner’s in
 
 In effect, this tool redefines what sound design in TouchDesigner can be—not merely reactive, but **generative, sculptable, and fully scriptable**. Its architecture provides a template for future expansions including envelope modules, modulation matrices, or even convolution-based spectral shaping.
 
-![Sound Design Capabilities](SoundDesign.png)
+![Sound Design Capabilities](images/SoundDesign.png)
