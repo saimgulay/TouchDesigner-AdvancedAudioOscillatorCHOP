@@ -1,8 +1,8 @@
 # Script-Based Audio Oscillator for TouchDesigner
 
-# Introduction
+## Introduction
 
-A modular, multi-channel oscillator for TouchDesigner with waveform mixing, BLEP, and wavetable synthesis. Ready for advanced methods in Electronic/Computer music and sonification.
+TouchDesigner offers a modular node-based environment primarily focused on real-time visual programming. While it provides basic audio synthesis functionalities, such as the built-in Audio Oscillator CHOP, these are inherently limited in scope, lacking the expressive depth and granularity typically expected by sound artists or interactive system designers. This project introduces a fully script-based, extensible, and modular audio oscillator built from the ground up using the Script CHOP. It leverages Python and NumPy to create a synthesis engine that not only replicates but surpasses the functionality of standard CHOPs.
 
 ---
 
@@ -56,11 +56,7 @@ Feel free to fork the repository and contribute enhancements such as:
 - GPU-based implementation  
 
 
-## Introduction
 
-TouchDesigner offers a modular node-based environment primarily focused on real-time visual programming. While it provides basic audio synthesis functionalities, such as the built-in Audio Oscillator CHOP, these are inherently limited in scope, lacking the expressive depth and granularity typically expected by sound artists or interactive system designers. This project introduces a fully script-based, extensible, and modular audio oscillator built from the ground up using the Script CHOP. It leverages Python and NumPy to create a synthesis engine that not only replicates but surpasses the functionality of standard CHOPs.
-
----
 
 ## Motivation
 
