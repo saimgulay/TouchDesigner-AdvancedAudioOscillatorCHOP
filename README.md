@@ -1,8 +1,9 @@
 # Script-Based Audio Oscillator for TouchDesigner
 
-## Introduction
+# Introduction
 
 A modular, multi-channel oscillator for TouchDesigner with waveform mixing, BLEP, and wavetable synthesis. Ready for advanced methods in Electronic/Computer music and sonification.
+
 ---
 
 ## Installation
