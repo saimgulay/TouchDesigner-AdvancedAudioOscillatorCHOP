@@ -155,7 +155,7 @@ The result is a significant improvement over the default Audio Oscillator CHOP i
 
 ---
 
- Future Development Recommendations
+## Future Development Recommendations
 
 The AdvancedAudioOscillatorCHOP project provides a flexible foundation for real-time procedural audio in TouchDesigner. Several directions are currently under consideration for future development:
 
