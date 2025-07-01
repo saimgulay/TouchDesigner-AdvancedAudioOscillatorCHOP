@@ -1,17 +1,21 @@
 import numpy as np
 
-# Global state
-phase = None
-filter_state = None
-integrator_state = None
-start_time = None
+# ======== GLOBAL STATE VARIABLES ========
+# These store per-channel persistent values across calls
+phase = None                # Current phase of oscillators
+filter_state = None         # State for smoothing filter (per channel)
+integrator_state = None     # For triangle wave generation (integrator memory)
+start_time = None           # Tracks absolute time for transitions
 
-TABLE_SIZE = 1024
+TABLE_SIZE = 1024           # Lookup table size for wavetable synthesis
+
+# ======== PARAMETER SETUP FUNCTIONS ========
 
 def onSetupParameters(scriptOp):
-    """Define general settings and rebuild pages when needed."""
+    """Initialise general UI parameters and set up per-channel pages."""
     general = scriptOp.appendCustomPage('General')
 
+    # Basic global controls
     p = general.appendFloat('Samplerate', label='Sample Rate', order=0)
     p[0].val = 44100
 
@@ -24,19 +28,21 @@ def onSetupParameters(scriptOp):
     p = general.appendFloat('Transitiontime', label='Transition Time', order=3)
     p[0].val = 0.01
 
-    # Create Absolute Time parameter driven by absTime.frame
+    # Automatically updates with absolute time (frames)
     p = general.appendFloat('Absolutetime', label='Absolute Time', order=4)
     p[0].expr = 'absTime.frame'; p[0].enableExpr = True
 
     general.appendPulse('Updatechannels', label='Update Channels', order=5)
+
     createChannelParameterPages(scriptOp)
 
 def createChannelParameterPages(scriptOp):
-    """(Re)build each channel’s page, preserving existing state."""
+    """Create and update per-channel parameter pages. Preserves values."""
     global phase, filter_state, integrator_state
 
     n = scriptOp.par.Numchannels.eval()
 
+    # Initialisation or resizing of per-channel state arrays
     if phase is None:
         phase            = np.zeros(n, dtype=np.float64)
         filter_state     = np.zeros(n, dtype=np.float64)
@@ -46,36 +52,36 @@ def createChannelParameterPages(scriptOp):
         filter_state     = np.resize(filter_state, n)
         integrator_state = np.resize(integrator_state, n)
 
-    # Remove surplus pages
+    # Remove unused channel pages if number of channels reduced
     pages = [pg for pg in scriptOp.customPages if pg.name.startswith('Channel ')]
     for pg in pages[n:]:
         pg.destroy()
 
-    # Add or update pages
+    # Add new pages if number of channels increased
     pages = [pg for pg in scriptOp.customPages if pg.name.startswith('Channel ')]
     for i in range(len(pages), n):
         letter = chr(ord('a') + i)
         pg = scriptOp.appendCustomPage(f'Channel {i+1}')
 
-        # Frequency & Amplitude at the top
+        # Frequency and amplitude
         f = pg.appendFloat(f'Frequency{i}', label=f'Frequency {i+1}', order=0)
         f[0].val = 440; f[0].normMin = 0; f[0].normMax = 10000
         a = pg.appendFloat(f'Amplitude{i}', label=f'Amplitude {i+1}', order=1)
         a[0].val = 1.0
 
-        # Mixer levels
+        # Mixer levels per waveform type
         for idx, mix_type in enumerate(['Sine','Square','Sawtooth','Triangle','Noise','Wavetable']):
             pm = pg.appendFloat(f'{mix_type}mix{letter}', label=f'{mix_type} Mix', order=10+idx)
             pm[0].val = 1.0 if mix_type=='Sine' else 0.0
             pm[0].normMin = 0.0; pm[0].normMax = 1.0
 
-        # Harmonic sliders
+        # 16 harmonics for custom wavetable synthesis
         for h in range(16):
             ph = pg.appendFloat(f'Harmonic{h+1}{letter}', label=f'Harmonic {h+1}', order=21+h)
             ph[0].val = 1.0 if h==0 else 0.0
             ph[0].normMin = -1.0; ph[0].normMax = 1.0
 
-        # Offset, Bias, Phase Shift, Smooth Pitch Changes
+        # Phase shaping and offset controls
         off = pg.appendFloat(f'Offset{letter}',  label='Offset', order=40)
         off[0].val = 0.0; off[0].normMin = -1.0; off[0].normMax = 1.0
         bi  = pg.appendFloat(f'Bias{letter}',    label='Bias',   order=41)
@@ -86,18 +92,20 @@ def createChannelParameterPages(scriptOp):
         sm[0].val = False
 
 def onPulse(par):
-    """Rebuild pages next cook when Update Channels is pressed."""
+    """Handles 'Update Channels' button press."""
     if par.name == 'Updatechannels':
-        pass
+        pass  # Page rebuild is handled in onCook
 
 def onStart(scriptOp):
-    """Initialise timing and pages before the first cook."""
+    """Called once when operator starts. Initialise pages and timers."""
     global start_time
     start_time = absTime.seconds
     createChannelParameterPages(scriptOp)
 
+# ======== SYNTHESIS FUNCTIONS ========
+
 def poly_blep(t, dt):
-    """Vectorised BLEP for anti-aliasing."""
+    """Anti-aliasing for sharp waveforms using Polynomial BLEP (band-limited step)."""
     out = np.zeros_like(t)
     m1 = t < dt
     m2 = t > 1 - dt
@@ -108,16 +116,16 @@ def poly_blep(t, dt):
     return out
 
 def rebuild_wavetable(i, harmonics):
-    """Build and normalise wavetable from 16 harmonics."""
+    """Generate wavetable by summing sine waves of defined harmonic weights."""
     phs = np.linspace(0, 1, TABLE_SIZE, endpoint=False)
     table = sum(g * np.sin(2*np.pi*(h+1)*phs) for h, g in enumerate(harmonics))
     m = np.max(np.abs(table))
-    return table/m if m>0 else table
+    return table/m if m > 0 else table
 
 def generate_waveforms_block(length, sr, phase, freqs, amps,
                              mixer_levels, offsets, biases,
                              phase_shifts, smooth_flags, all_harmonics):
-    """Vectorised generation for all channels at once."""
+    """Create one block of multi-channel audio using multiple synthesis types."""
     nch = len(phase)
     out = np.zeros((nch, length))
     new_phase = np.zeros_like(phase)
@@ -129,14 +137,19 @@ def generate_waveforms_block(length, sr, phase, freqs, amps,
         idxs = ph0 + inc * np.arange(length)
         ti = idxs % 1.0
 
+        # Base oscillators
         sine = np.sin(2*np.pi*ti)
+
+        # BLEP-corrected square
         square = np.where(ti < biases[i], 1.0, -1.0)
         square -= poly_blep(ti, inc)
         square += poly_blep((ti + biases[i]) % 1.0, inc)
 
+        # BLEP-corrected sawtooth
         saw = 2*ti - 1
         saw -= poly_blep(ti, inc)
 
+        # Triangle via integration of square
         tri_int = integrator_state[i]
         tri = np.empty(length)
         y = tri_int
@@ -147,6 +160,7 @@ def generate_waveforms_block(length, sr, phase, freqs, amps,
 
         noise = np.random.uniform(-1, 1, length)
 
+        # Lookup wavetable using harmonic blend
         harms = all_harmonics[i]
         table = rebuild_wavetable(i, harms)
         idxf = (ti * TABLE_SIZE) % TABLE_SIZE
@@ -154,6 +168,7 @@ def generate_waveforms_block(length, sr, phase, freqs, amps,
         frac = idxf - i0
         wt = (1-frac)*table[i0] + frac*table[(i0+1)%TABLE_SIZE]
 
+        # Final waveform mix and amplitude
         mix = ( mixer_levels[i,0]*sine +
                 mixer_levels[i,1]*square +
                 mixer_levels[i,2]*saw +
@@ -167,7 +182,7 @@ def generate_waveforms_block(length, sr, phase, freqs, amps,
     return out, new_phase, new_int
 
 def apply_one_pole(signals, sr, state, cutoff=8000.0):
-    """Per-channel one-pole smoothing."""
+    """Simple low-pass filter applied per channel."""
     alpha = np.exp(-2*np.pi*cutoff/sr)
     out = np.empty_like(signals)
     for i in range(signals.shape[0]):
@@ -181,18 +196,20 @@ def apply_one_pole(signals, sr, state, cutoff=8000.0):
         state[i] = y
     return out
 
+# ======== AUDIO COOK CALLBACK ========
+
 def onCook(scriptOp):
-    """Main audio callback with guard for pages and numSamples override."""
+    """Main audio generator called every frame (or block)."""
     global phase, filter_state, integrator_state, start_time
 
-    # Guard: rebuild pages if needed
+    # Safety: Check if channels or parameters need update
     if (phase is None
         or len(phase) != scriptOp.par.Numchannels.eval()
         or scriptOp.par.Updatechannels.eval()):
         scriptOp.par.Updatechannels.val = 0
         createChannelParameterPages(scriptOp)
 
-    # Override built-in samples count
+    # Override built-in timing
     numS = scriptOp.par.Numsamples.eval()
     scriptOp.isTimeSlice = False
     scriptOp.numSamples = int(numS)
@@ -208,6 +225,7 @@ def onCook(scriptOp):
     length = numS
     scriptOp.isTimeSlice = (now - start_time) >= trans
 
+    # Retrieve all user-defined parameters
     freqs = np.array([scriptOp.par[f'Frequency{i}'].eval() for i in range(chans)], float)
     amps  = np.array([scriptOp.par[f'Amplitude{i}'].eval()  for i in range(chans)], float)
     mixer = np.array([[scriptOp.par[f'{mt}mix{chr(ord("a")+i)}'].eval()
@@ -220,6 +238,7 @@ def onCook(scriptOp):
     all_harmonics = np.array([[scriptOp.par[f'Harmonic{h+1}{chr(ord("a")+i)}'].eval()
                                for h in range(16)] for i in range(chans)], float)
 
+    # Generate and filter the signal
     raw, phase, integrator_state = generate_waveforms_block(
         length, sr, phase, freqs, amps,
         mixer, offsets, biases,
@@ -228,6 +247,7 @@ def onCook(scriptOp):
 
     smooth = apply_one_pole(raw, sr, filter_state, cutoff=8000.0)
 
+    # Output to TouchDesigner CHOP channels
     scriptOp.clear()
     scriptOp.rate = sr
     for i in range(chans):
