@@ -6,6 +6,10 @@ TouchDesigner offers a modular node-based environment primarily focused on real-
 
 ---
 
+![Full Screen](images/AAOCHOP.png)
+
+---
+
 ## Installation
 
 1. Clone the repository or download ZIP  
