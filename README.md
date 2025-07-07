@@ -1,14 +1,110 @@
 # Script-Based Audio Oscillator for TouchDesigner
 
-## Introduction
-
-TouchDesigner offers a modular node-based environment primarily focused on real-time visual programming. While it provides basic audio synthesis functionalities, such as the built-in [Audio Oscillator CHOP](https://docs.derivative.ca/Audio_Oscillator_CHOP), these are inherently limited in scope, lacking the expressive depth and granularity typically expected by sound artists or interactive system designers. This project introduces a fully script-based, extensible, and modular audio oscillator built from the ground up using the Script CHOP. It leverages Python and NumPy to create a synthesis engine that not only replicates but surpasses the functionality of standard CHOPs.
-
 ---
 
 ![Full Screen](images/AAOCHOP.png)
 
 ---
+
+
+## Documentation
+
+
+# AdvancedAudioOscillatorCHOP
+
+## Summary
+
+The AdvancedAudioOscillatorCHOP is a script-based CHOP designed for procedural audio synthesis within TouchDesigner. Implemented entirely in Python using the Script CHOP, it enables multi-voice oscillator functionality with per-channel control. Each voice supports real-time waveform blending, harmonic wavetable synthesis, and BLEP-based anti-aliasing. The system operates independently of built-in audio operators and supports full customisation through dynamic parameter pages.
+
+---
+
+## Parameters - General Page
+
+* **Sample Rate** `Samplerate` – Number of samples per second. Defines the output resolution. Default is 44100 Hz.
+* **Num Channels** `Numchannels` – Number of oscillator voices. UI pages are created per voice.
+* **Num Samples** `Numsamples` – Number of samples generated per cook.
+* **Transition Time** `Transitiontime` – Delay before oscillator starts generating output. Useful for synchronisation.
+* **Absolute Time** `Absolutetime` – Tracks the absolute timeline of the network. Read-only.
+* **Update Channels** `Updatechannels` – Pulse to rebuild all per-channel UI pages when channel count changes.
+
+---
+
+## Parameters - Channel Pages
+
+Each voice includes a custom UI page with the following parameters:
+
+* **Frequency** – Oscillator frequency in Hz.
+* **Amplitude** – Output amplitude.
+* **Sine Mix** – Gain for sine component.
+* **Square Mix** – Gain for square component (BLEP corrected).
+* **Sawtooth Mix** – Gain for sawtooth component (BLEP corrected).
+* **Triangle Mix** – Gain for triangle waveform (integrated from square).
+* **Noise Mix** – Gain for uniform white noise.
+* **Wavetable Mix** – Gain for user-defined harmonic wavetable.
+* **Harmonic 1–16** – Partial weights for harmonic construction of wavetable.
+* **Offset** – Adds DC offset to waveform.
+* **Bias** – Controls pulse width or triangle shaping.
+* **Phase Shift** – Initial phase offset for waveform.
+* **Smooth Pitch Changes** – Enables sample-accurate pitch interpolation.
+
+---
+
+## Output Behaviour
+
+This operator generates one output channel per active oscillator. Channels are named `oscillator_1`, `oscillator_2`, etc. Output resolution and timing are defined by the Sample Rate and Num Samples parameters. A built-in one-pole filter is applied to each channel to reduce high-frequency artefacts.
+
+---
+
+## Audio Features
+
+* BLEP anti-aliasing for sharp transitions
+* Harmonic wavetable generation
+* Per-channel additive synthesis
+* One-pole low-pass filter
+* Dynamic UI creation per oscillator voice
+
+---
+
+## Operator Inputs
+
+This CHOP does not accept external inputs. All control is performed through parameter pages.
+
+---
+
+## Use Cases
+
+* Multi-voice procedural audio synthesis
+* Real-time waveform morphing and modulation
+* LFO generation at audio or control rates
+* Teaching waveform construction and synthesis
+
+---
+
+## Comparison
+
+* **Audio Oscillator CHOP** – Offers fixed waveform selection with limited modulation. AdvancedAudioOscillatorCHOP adds per-voice control, BLEP filtering, harmonic control, and full waveform blending.
+* **LFO CHOP** – Typically runs at 60Hz with basic waveforms. AdvancedAudioOscillatorCHOP supports high-rate LFO generation with synthesis-level detail.
+
+---
+
+## Notes
+
+* Requires TouchDesigner 2022.2 or later.
+* NumPy must be available (included by default).
+* Channels and parameters are rebuilt when pressing Update Channels or when voice count changes.
+
+---
+
+TouchDesigner Build: 2022.2+
+
+Category: CHOPs – Script CHOP
+
+## Repository
+
+
+TouchDesigner offers a modular node-based environment primarily focused on real-time visual programming. While it provides basic audio synthesis functionalities, such as the built-in [Audio Oscillator CHOP](https://docs.derivative.ca/Audio_Oscillator_CHOP), these are inherently limited in scope, lacking the expressive depth and granularity typically expected by sound artists or interactive system designers. This project introduces a fully script-based, extensible, and modular audio oscillator built from the ground up using the Script CHOP. It leverages Python and NumPy to create a synthesis engine that not only replicates but surpasses the functionality of standard CHOPs.
+
+
 
 ## Installation
 
@@ -31,13 +127,6 @@ TouchDesigner offers a modular node-based environment primarily focused on real-
 
 ---
 
-## Dependencies
-
-- [NumPy](https://numpy.org/) – used internally by TouchDesigner (already included)  
-- TouchDesigner 2022 or later  
-- No third-party VSTs required
-
----
 
 ## Credits
 
