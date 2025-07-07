@@ -10,94 +10,110 @@
 ## Documentation
 
 
-# AdvancedAudioOscillatorCHOP
+AdvancedAudioOscillatorCHOP  
+Summary  
+The AdvancedAudioOscillatorCHOP is a multi-voice, script-based oscillator for procedural audio synthesis. Implemented in Python using the Script CHOP, it supports per-voice waveform mixing, harmonic wavetable synthesis, and BLEP anti-aliasing. It outputs signals at audio or control rates and provides dynamically generated channel parameter pages.
 
-## Summary
+The oscillator blends six waveform types (sine, square, sawtooth, triangle, noise, wavetable), supports additive harmonic shaping, and includes filtering. It does not require any input CHOPs and operates entirely via custom parameters.
 
-The AdvancedAudioOscillatorCHOP is a script-based CHOP designed for procedural audio synthesis within TouchDesigner. Implemented entirely in Python using the Script CHOP, it enables multi-voice oscillator functionality with per-channel control. Each voice supports real-time waveform blending, harmonic wavetable synthesis, and BLEP-based anti-aliasing. The system operates independently of built-in audio operators and supports full customisation through dynamic parameter pages.
+Unlike the built-in Audio Oscillator CHOP, which offers a fixed waveform per output and limited modulation capabilities, this CHOP is modular, programmable, and designed for advanced sound synthesis or complex control signal generation.
 
----
-
-## Parameters - General Page
-
-* **Sample Rate** `Samplerate` – Number of samples per second. Defines the output resolution. Default is 44100 Hz.
-* **Num Channels** `Numchannels` – Number of oscillator voices. UI pages are created per voice.
-* **Num Samples** `Numsamples` – Number of samples generated per cook.
-* **Transition Time** `Transitiontime` – Delay before oscillator starts generating output. Useful for synchronisation.
-* **Absolute Time** `Absolutetime` – Tracks the absolute timeline of the network. Read-only.
-* **Update Channels** `Updatechannels` – Pulse to rebuild all per-channel UI pages when channel count changes.
+See also: Audio Oscillator CHOP, LFO CHOP, Wave CHOP.
 
 ---
 
-## Parameters - Channel Pages
-
-Each voice includes a custom UI page with the following parameters:
-
-* **Frequency** – Oscillator frequency in Hz.
-* **Amplitude** – Output amplitude.
-* **Sine Mix** – Gain for sine component.
-* **Square Mix** – Gain for square component (BLEP corrected).
-* **Sawtooth Mix** – Gain for sawtooth component (BLEP corrected).
-* **Triangle Mix** – Gain for triangle waveform (integrated from square).
-* **Noise Mix** – Gain for uniform white noise.
-* **Wavetable Mix** – Gain for user-defined harmonic wavetable.
-* **Harmonic 1–16** – Partial weights for harmonic construction of wavetable.
-* **Offset** – Adds DC offset to waveform.
-* **Bias** – Controls pulse width or triangle shaping.
-* **Phase Shift** – Initial phase offset for waveform.
-* **Smooth Pitch Changes** – Enables sample-accurate pitch interpolation.
+Contents  
+- Summary  
+- Parameters – General Page  
+- Parameters – Channel Pages  
+- Output Behaviour  
+- Audio Features  
+- Operator Inputs  
+- Info CHOP Channels  
+- Common CHOP Info Channels  
+- Common Operator Info Channels  
 
 ---
 
-## Output Behaviour
-
-This operator generates one output channel per active oscillator. Channels are named `oscillator_1`, `oscillator_2`, etc. Output resolution and timing are defined by the Sample Rate and Num Samples parameters. A built-in one-pole filter is applied to each channel to reduce high-frequency artefacts.
-
----
-
-## Audio Features
-
-* BLEP anti-aliasing for sharp transitions
-* Harmonic wavetable generation
-* Per-channel additive synthesis
-* One-pole low-pass filter
-* Dynamic UI creation per oscillator voice
+Parameters – General Page  
+Samplerate – The sample rate of the output signals in samples per second. Default: 44100.  
+Numchannels – Number of oscillator voices. One output channel and UI page is created per voice.  
+Numsamples – Number of samples output per cook.  
+Transitiontime – Duration in seconds before oscillator output begins. Useful for synchronisation.  
+Absolutetime – Absolute time (in frames). Read-only.  
+Updatechannels – Pulse to regenerate per-voice parameter pages.
 
 ---
 
-## Operator Inputs
+Parameters – Channel Pages  
+Each oscillator voice includes the following controls:
 
-This CHOP does not accept external inputs. All control is performed through parameter pages.
-
----
-
-## Use Cases
-
-* Multi-voice procedural audio synthesis
-* Real-time waveform morphing and modulation
-* LFO generation at audio or control rates
-* Teaching waveform construction and synthesis
-
----
-
-## Comparison
-
-* **Audio Oscillator CHOP** – Offers fixed waveform selection with limited modulation. AdvancedAudioOscillatorCHOP adds per-voice control, BLEP filtering, harmonic control, and full waveform blending.
-* **LFO CHOP** – Typically runs at 60Hz with basic waveforms. AdvancedAudioOscillatorCHOP supports high-rate LFO generation with synthesis-level detail.
+Frequency – Oscillator pitch in Hz.  
+Amplitude – Output amplitude of the oscillator.  
+Sinemix – Gain for the sine waveform.  
+Squaremix – Gain for the BLEP-corrected square waveform.  
+Sawtoothmix – Gain for the BLEP-corrected sawtooth waveform.  
+Trianglemix – Gain for the triangle waveform, integrated from square.  
+Noisemix – Gain for white noise.  
+Wavetablemix – Gain for the additive wavetable.  
+Harmonic1–16 – 16 parameters to define the amplitude of each partial in the wavetable.  
+Offset – DC offset applied to the waveform.  
+Bias – Pulse width for square, shape skew for triangle.  
+Phase – Initial phase shift (0–1).  
+Smooth – Toggles sample-accurate pitch modulation.
 
 ---
 
-## Notes
-
-* Requires TouchDesigner 2022.2 or later.
-* NumPy must be available (included by default).
-* Channels and parameters are rebuilt when pressing Update Channels or when voice count changes.
+Output Behaviour  
+Output channels are named `oscillator_1`, `oscillator_2`, etc., based on the number of active voices. Audio is generated using custom synthesis routines per frame. A one-pole low-pass filter (cutoff: 8kHz) is applied to each output to reduce aliasing artefacts.
 
 ---
 
-TouchDesigner Build: 2022.2+
+Audio Features  
+- Polynomial BLEP correction for alias-free square and sawtooth  
+- Additive harmonic wavetable synthesis  
+- White noise generator  
+- Triangle synthesis via integration  
+- Per-voice filter and offset control  
+- Dynamic custom parameter UI creation
 
+---
+
+Operator Inputs  
+Input 0: –  
+Input 1: –  
+Input 2: –  
+(This operator does not accept external CHOP inputs. All modulation is internal via parameters.)
+
+---
+
+Info CHOP Channels  
+Extra Information for the AdvancedAudioOscillatorCHOP can be accessed via an Info CHOP.
+
+Common CHOP Info Channels  
+start – Start of the CHOP interval in samples.  
+length – Number of samples in the CHOP.  
+sample_rate – The samplerate of the channels in frames per second.  
+num_channels – Number of output channels.  
+time_slice – 1 if CHOP is Time Slice enabled, 0 otherwise.  
+export_sernum – Serial number of export changes.
+
+Common Operator Info Channels  
+total_cooks – Number of times the operator has cooked.  
+cook_time – Duration of last cook in milliseconds.  
+cook_frame – Timeline-relative frame number of last cook.  
+cook_abs_frame – Absolute frame number of last cook.  
+cook_start_time – Start time of last cook in ms.  
+cook_end_time – End time of last cook in ms.  
+cooked_this_frame – 1 if cooked this frame.  
+warnings – Number of current warnings.  
+errors – Number of current errors.
+
+---
+
+TouchDesigner Build: 2022.2+  
 Category: CHOPs – Script CHOP
+
 
 ## Repository
 
