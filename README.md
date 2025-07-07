@@ -11,9 +11,9 @@
 
 
 AdvancedAudioOscillatorCHOP  
----
-**Summary:**
----
+
+**Summary**
+
 The AdvancedAudioOscillatorCHOP is a multi-voice, script-based oscillator for procedural audio synthesis. Implemented in Python using the Script CHOP, it supports per-voice waveform mixing, harmonic wavetable synthesis, and BLEP anti-aliasing. It outputs signals at audio or control rates and provides dynamically generated channel parameter pages.
 
 The oscillator blends six waveform types (sine, square, sawtooth, triangle, noise, wavetable), supports additive harmonic shaping, and includes filtering. It does not require any input CHOPs and operates entirely via custom parameters.
