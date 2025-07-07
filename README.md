@@ -32,7 +32,8 @@ Contents
 - Info CHOP Channels  
 - Common CHOP Info Channels  
 - Common Operator Info Channels  
-
+- Repository & Usage
+- White-paper
 ---
 
 Parameters – General Page  
