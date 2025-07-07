@@ -18,7 +18,7 @@ The oscillator blends six waveform types (sine, square, sawtooth, triangle, nois
 
 Unlike the built-in Audio Oscillator CHOP, which offers a fixed waveform per output and limited modulation capabilities, this CHOP is modular, programmable, and designed for advanced sound synthesis or complex control signal generation.
 
-See also: Audio Oscillator CHOP, LFO CHOP, Wave CHOP.
+See also: [Audio Oscillator CHOP](https://derivative.ca/UserGuide/Audio_Oscillator_CHOP)  , [LFO CHOP](https://derivative.ca/UserGuide/LFO_CHOP)  , [Pattern CHOP](https://derivative.ca/UserGuide/Pattern_CHOP)  .
 
 ---
 
