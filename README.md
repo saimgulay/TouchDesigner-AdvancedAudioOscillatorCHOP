@@ -24,7 +24,7 @@ See also: [Audio Oscillator CHOP](https://derivative.ca/UserGuide/Audio_Oscillat
 
 ---
 
-Contents  
+**Contents**  
 - Summary  
 - Parameters – General Page  
 - Parameters – Channel Pages  
@@ -38,7 +38,7 @@ Contents
 - White-paper
 ---
 
-Parameters – General Page  
+**Parameters – General Page**  
 Samplerate – The sample rate of the output signals in samples per second. Default: 44100.  
 Numchannels – Number of oscillator voices. One output channel and UI page is created per voice.  
 Numsamples – Number of samples output per cook.  
@@ -48,7 +48,7 @@ Updatechannels – Pulse to regenerate per-voice parameter pages.
 
 ---
 
-Parameters – Channel Pages  
+**Parameters – Channel Pages**  
 Each oscillator voice includes the following controls:
 
 Frequency – Oscillator pitch in Hz.  
@@ -67,12 +67,12 @@ Smooth – Toggles sample-accurate pitch modulation.
 
 ---
 
-Output Behaviour  
+**Output Behaviour**  
 Output channels are named `oscillator_1`, `oscillator_2`, etc., based on the number of active voices. Audio is generated using custom synthesis routines per frame. A one-pole low-pass filter (cutoff: 8kHz) is applied to each output to reduce aliasing artefacts.
 
 ---
 
-Audio Features  
+**Audio Features**  
 - Polynomial BLEP correction for alias-free square and sawtooth  
 - Additive harmonic wavetable synthesis  
 - White noise generator  
@@ -82,7 +82,7 @@ Audio Features
 
 ---
 
-Operator Inputs  
+**Operator Inputs**  
 Input 0: –  
 Input 1: –  
 Input 2: –  
@@ -90,10 +90,10 @@ Input 2: –
 
 ---
 
-Info CHOP Channels  
+**Info CHOP Channels**  
 Extra Information for the AdvancedAudioOscillatorCHOP can be accessed via an Info CHOP.
 
-Common CHOP Info Channels  
+**Common CHOP Info Channels**  
 start – Start of the CHOP interval in samples.  
 length – Number of samples in the CHOP.  
 sample_rate – The samplerate of the channels in frames per second.  
@@ -101,7 +101,7 @@ num_channels – Number of output channels.
 time_slice – 1 if CHOP is Time Slice enabled, 0 otherwise.  
 export_sernum – Serial number of export changes.
 
-Common Operator Info Channels  
+**Common Operator Info Channels**  
 total_cooks – Number of times the operator has cooked.  
 cook_time – Duration of last cook in milliseconds.  
 cook_frame – Timeline-relative frame number of last cook.  
