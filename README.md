@@ -7,7 +7,7 @@
 ---
 
 
-For more details, see [Wiki](https://github.com/saimgulay/TouchDesigner-AdvancedAudioOscillatorCHOP/wiki)
+For more details about the parameters, see [Wiki](https://github.com/saimgulay/TouchDesigner-AdvancedAudioOscillatorCHOP/wiki). 
 
 ---
 
