@@ -33,7 +33,7 @@ TouchDesigner offers a modular node-based environment primarily focused on real-
 - Press `Update Channels` pulse to refresh pages  
 - Adjust waveform mix sliders and harmonic levels  
 - Automate parameters via CHOP exports (LFOs, Noise, Audio In, etc.)
-- Type `absTime.seconds` to Absolute Time parameter (**Very Important!!!**)
+- Type `absTime.frame` to Absolute Time parameter (**Very Important!!!**)
 - Route final output to `Audio Device Out CHOP` for monitoring  
 
 ---
